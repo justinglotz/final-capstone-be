@@ -11,8 +11,8 @@ from .venue import Venue
 
 class Concert(models.Model):
     """Represents a concert in the database"""
-    artist_id = models.ForeignKey(Artist, on_delete=models.SET_NULL)
-    venue_id = models.ForeignKey(Venue, on_delete=models.SET_NULL)
+    artist_id = models.ForeignKey(Artist, on_delete=models.SET_NULL, null=True)
+    venue_id = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True)
     tour_name = models.CharField(max_length=50)
     date = models.DateField()
     time = models.TimeField()
