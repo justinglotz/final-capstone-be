@@ -14,11 +14,10 @@ class ArtistSearchSerializer(serializers.Serializer):
 class ArtistView(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def search(self, request):
-        # Get the query parameters from the request
         search_param = request.GET.get('q', '')
         default_params = {
-            'type': 'artist',   # always search artists
-            'limit': 10         # always limit results
+            'type': 'artist',
+            'limit': 5
         }
         artist_search_params = {**default_params, 'q': search_param}
         results = spotify_get('search', artist_search_params)
