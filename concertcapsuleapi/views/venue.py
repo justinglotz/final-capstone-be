@@ -25,6 +25,6 @@ class VenueView(viewsets.ViewSet):
             'country': 'US'
         }
         results = setlist_fm_get('search/venues', venue_search_params)
-        venue_data = results["venue"]
+        venue_data = results.get("venue", [])
         serializer = VenueSearchSerializer(venue_data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
