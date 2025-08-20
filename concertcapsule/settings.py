@@ -63,6 +63,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://www.concertcapsule.com/"
 ]
 
 ROOT_URLCONF = 'concertcapsule.urls'
