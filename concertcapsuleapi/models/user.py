@@ -10,7 +10,7 @@ from django.db import models
 
 class User(models.Model):
     """Represents a user in the database"""
-    uid_firebase = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
+    uid_firebase = models.CharField(max_length=50, unique=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    username = models.CharField(max_length=50, unique=True)
