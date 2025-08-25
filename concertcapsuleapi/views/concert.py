@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from concertcapsuleapi.models import Concert, Artist, Venue
+from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User
 
 
 class ConcertView(ViewSet):
@@ -28,6 +28,13 @@ class ConcertView(ViewSet):
             tour_name=request.data["tourName"],
             date=request.data["date"],
             time=request.data["time"]
+        )
+        fb_uid = request.data.get("uid_firebase")
+        user = User.objects.get(uid_firebase=fb_uid)
+
+        UserConcert.objects.create(
+            concert=concert,
+            user=user,
         )
         serializer = ConcertSerializer(concert)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
