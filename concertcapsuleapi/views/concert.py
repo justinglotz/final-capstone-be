@@ -39,8 +39,18 @@ class ConcertView(ViewSet):
         serializer = ConcertSerializer(concert)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def list(self, request):
+        """Handle GET requests to get all concerts by username"""
+        username = request.query_params.get("username")
+        user = User.objects.get(username=username)
+        concerts = Concert.objects.filter(
+            userconcerts__user=user).order_by('-date')
+        serializer = ConcertSerializer(concerts, many=True)
+        return Response(serializer.data)
+
 
 class ConcertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Concert
         fields = ('id', 'artist', 'venue', 'tour_name', 'date', 'time')
+        depth = 1
