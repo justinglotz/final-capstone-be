@@ -59,7 +59,7 @@ class ConcertView(viewsets.ViewSet):
             user_id=user
         )
         user_concert.delete()
-        return Response({"Concert successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['post'], url_path='add-to-profile', url_name='add-to-profile')
     def add_to_profile(self, request, pk=None):
