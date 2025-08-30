@@ -28,5 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register', register_user),
     path('checkuser', check_user),
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('concerts/<int:pk>/', ConcertView.as_view({'delete': 'destroy'})),
 ]
