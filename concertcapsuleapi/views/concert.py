@@ -1,11 +1,12 @@
 from django.http import HttpResponseServerError
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User
 
 
-class ConcertView(ViewSet):
+class ConcertView(ModelViewSet):
     def create(self, request):
         """Handle POST requests to create a new concert"""
         artist, created = Artist.objects.get_or_create(
@@ -59,7 +60,21 @@ class ConcertView(ViewSet):
             user_id=user
         )
         user_concert.delete()
-        return Response({"Concert successfully deleeted"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"Concert successfully deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'], url_path='add-to-profile', url_name='add-to-profile')
+    def add_to_profile(self, request, pk=None):
+        concert_id = pk
+        username = request.data.get('username')
+        user = User.objects.get(username=username)
+        user_concert, created = UserConcert.objects.get_or_create(
+            concert_id=concert_id,
+            user=user
+        )
+        if created:
+            return Response({'message': 'Concert added to profile'}, status=201)
+        else:
+            return Response({'message': 'Concert already in profile'}, status=200)
 
 
 class ConcertSerializer(serializers.ModelSerializer):
