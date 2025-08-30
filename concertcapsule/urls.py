@@ -29,5 +29,10 @@ urlpatterns = [
     path('register', register_user),
     path('checkuser', check_user),
     path('', include(router.urls)),
-    path('concerts/<int:pk>/', ConcertView.as_view({'delete': 'destroy'})),
+    path('concerts/<int:pk>/', ConcertView.as_view({
+        'delete': 'destroy'
+    })),
+    path('concerts/<int:pk>/add-to-profile/', ConcertView.as_view({
+        'post': 'add_to_profile'
+    })),
 ]
