@@ -1,12 +1,11 @@
 from django.http import HttpResponseServerError
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User
 
 
-class ConcertView(ModelViewSet):
+class ConcertView(viewsets.ViewSet):
     def create(self, request):
         """Handle POST requests to create a new concert"""
         artist, created = Artist.objects.get_or_create(
@@ -26,9 +25,9 @@ class ConcertView(ModelViewSet):
         concert = Concert.objects.create(
             artist=artist,
             venue=venue,
-            tour_name=request.data["tourName"],
+            tour_name=request.data.get("tourName"),
             date=request.data["date"],
-            time=request.data["time"]
+            time=request.data.get("time")
         )
         fb_uid = request.data.get("uid_firebase")
         user = User.objects.get(uid_firebase=fb_uid)
