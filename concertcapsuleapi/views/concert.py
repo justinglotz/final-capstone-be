@@ -48,6 +48,19 @@ class ConcertView(ViewSet):
         serializer = ConcertSerializer(concerts, many=True)
         return Response(serializer.data)
 
+    def destroy(self, request, pk):
+        """Handle DELETE requests for concerts"""
+        # Delete the row in the userConcert table where the concert_id and user_id match
+        concert_id = pk
+        username = request.query_params.get("username")
+        user = User.objects.get(username=username)
+        user_concert = UserConcert.objects.get(
+            concert_id=concert_id,
+            user_id=user
+        )
+        user_concert.delete()
+        return Response({"Concert successfully deleeted"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class ConcertSerializer(serializers.ModelSerializer):
     class Meta:
