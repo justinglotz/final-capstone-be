@@ -4,11 +4,7 @@ from rest_framework.response import Response
 from rest_framework import response
 from concertcapsuleapi.models import Artist
 from concertcapsuleapi.services import spotify_get
-
-
-class ArtistSearchSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    name = serializers.CharField()
+from concertcapsuleapi.serializers import ArtistSearchSerializer
 
 
 class ArtistView(viewsets.ViewSet):

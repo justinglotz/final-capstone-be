@@ -48,7 +48,7 @@ def register_user(request):
         last_name=request.data['last_name']
     )
 
-    # Return the gamer info to the client
+    # Return the user info to the client
     data = {
         'id': user.id,
         'uid_firebase': user.uid_firebase,

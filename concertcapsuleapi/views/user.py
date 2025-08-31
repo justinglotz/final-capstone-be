@@ -4,6 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from concertcapsuleapi.models import User
+from concertcapsuleapi.serializers import UserSerializer, UsernameSearchSerializer
 
 
 class UserView(ViewSet):
@@ -61,15 +62,3 @@ class UserView(ViewSet):
 
         serializer = UsernameSearchSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'uid_firebase', 'username', 'first_name', 'last_name')
-
-
-class UsernameSearchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username',)

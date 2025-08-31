@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User
+from concertcapsuleapi.serializers import ConcertSerializer
 
 
 class ConcertView(viewsets.ViewSet):
@@ -74,10 +75,3 @@ class ConcertView(viewsets.ViewSet):
             return Response({'message': 'Concert added to profile'}, status=201)
         else:
             return Response({'message': 'Concert already in profile'}, status=200)
-
-
-class ConcertSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Concert
-        fields = ('id', 'artist', 'venue', 'tour_name', 'date', 'time')
-        depth = 1
