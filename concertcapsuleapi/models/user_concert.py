@@ -13,3 +13,4 @@ class UserConcert(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     concert = models.ForeignKey(
         Concert, on_delete=models.CASCADE, related_name="userconcerts")
+    created_at = models.DateTimeField(auto_now_add=True)

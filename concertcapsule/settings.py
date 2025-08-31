@@ -12,11 +12,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 import dj_database_url
+import firebase_admin
+from firebase_admin import credentials
 from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
+SERVICE_ACCOUNT_PATH = os.getenv('FIREBASE_SERVICE_ACCOUNT_PATH')
+if SERVICE_ACCOUNT_PATH:
+    cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+    firebase_admin.initialize_app(cred)
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 SETLIST_FM_KEY = os.getenv('SETLIST_FM_KEY')
