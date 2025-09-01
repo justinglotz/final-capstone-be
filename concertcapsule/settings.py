@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import json
 import dj_database_url
 import firebase_admin
 from firebase_admin import credentials
@@ -19,9 +20,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SERVICE_ACCOUNT_PATH = os.getenv('FIREBASE_SERVICE_ACCOUNT_PATH')
-if SERVICE_ACCOUNT_PATH:
-    cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+SERVICE_ACCOUNT_JSON = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+if SERVICE_ACCOUNT_JSON:
+    service_account_info = json.loads(SERVICE_ACCOUNT_JSON)
+    cred = credentials.Certificate(service_account_info)
     firebase_admin.initialize_app(cred)
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
