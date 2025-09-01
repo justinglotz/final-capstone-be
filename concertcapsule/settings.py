@@ -19,9 +19,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+SERVICE_ACCOUNT_JSON = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
 
-SERVICE_ACCOUNT_JSON = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
-if SERVICE_ACCOUNT_JSON:
+if SERVICE_ACCOUNT_JSON and not firebase_admin._apps:
     service_account_info = json.loads(SERVICE_ACCOUNT_JSON)
     cred = credentials.Certificate(service_account_info)
     firebase_admin.initialize_app(cred)
