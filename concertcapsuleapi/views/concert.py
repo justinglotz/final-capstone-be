@@ -2,8 +2,9 @@ from django.http import HttpResponseServerError
 from rest_framework.response import Response
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
-from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User
-from concertcapsuleapi.serializers import ConcertSerializer
+from concertcapsuleapi.models import Concert, Artist, Venue, UserConcert, User, Like
+from concertcapsuleapi.serializers import ConcertSerializer, UserConcertSerializer
+from firebase_admin import auth
 
 
 class ConcertView(viewsets.ViewSet):
@@ -42,22 +43,29 @@ class ConcertView(viewsets.ViewSet):
 
     def list(self, request):
         """Handle GET requests to get all concerts by username"""
+        auth_header = request.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer '):
+            firebase_token = auth_header.split(' ')[1]
+            decoded_token = auth.verify_id_token(
+                firebase_token, clock_skew_seconds=5)
+            firebase_uid = decoded_token['uid']
+            current_user = User.objects.filter(
+                uid_firebase=firebase_uid).first()
         username = request.query_params.get("username")
         user = User.objects.get(username=username)
-        concerts = Concert.objects.filter(
-            userconcerts__user=user).order_by('-date')
-        serializer = ConcertSerializer(concerts, many=True)
+        concerts = UserConcert.objects.filter(
+            user=user).order_by("-concert__date")
+
+        serializer = UserConcertSerializer(
+            concerts, many=True, context={'user': current_user})
         return Response(serializer.data)
 
     def destroy(self, request, pk):
         """Handle DELETE requests for concerts"""
         # Delete the row in the userConcert table where the concert_id and user_id match
-        concert_id = pk
         username = request.query_params.get("username")
-        user = User.objects.get(username=username)
         user_concert = UserConcert.objects.get(
-            concert_id=concert_id,
-            user_id=user
+            pk=pk
         )
         user_concert.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -75,3 +83,11 @@ class ConcertView(viewsets.ViewSet):
             return Response({'message': 'Concert added to profile'}, status=201)
         else:
             return Response({'message': 'Concert already in profile'}, status=200)
+
+    @action(detail=True, methods=['get'])
+    def get_likes(self, request, pk=None):
+        user_concert_id = pk
+        likes = Like.objects.filter(
+            user_concert_id=user_concert_id).select_related('user')
+        usernames = [like.user.username for like in likes]
+        return Response({'usernames': usernames}, status=200)

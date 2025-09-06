@@ -11,3 +11,4 @@ from .user_concert import UserConcert
 from .user import User
 from .venue import Venue
 from .follow import Follow
+from .like import Like
