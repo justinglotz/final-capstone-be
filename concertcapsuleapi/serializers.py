@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from concertcapsuleapi.models import Concert, UserConcert, User
+from concertcapsuleapi.models import Concert, UserConcert, User, Like
 
 
 class ConcertSerializer(serializers.ModelSerializer):
@@ -29,7 +29,23 @@ class ArtistSearchSerializer(serializers.Serializer):
 class UserConcertSerializer(serializers.ModelSerializer):
     concert = ConcertSerializer(read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
+    is_liked = serializers.SerializerMethodField()
+    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = UserConcert
-        fields = ['id', 'concert', 'username', 'created_at']
+        fields = ['id', 'concert', 'username',
+                  'created_at', 'is_liked', 'like_count']
+
+    def get_is_liked(self, obj):
+        user = self.context['user']
+        return Like.objects.filter(user=user, user_concert=obj).exists()
+
+    def get_like_count(self, obj):
+        return obj.like_set.count()
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user_concert']
