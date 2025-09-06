@@ -91,3 +91,47 @@ class ConcertView(viewsets.ViewSet):
             user_concert_id=user_concert_id).select_related('user')
         usernames = [like.user.username for like in likes]
         return Response({'usernames': usernames}, status=200)
+
+    @action(detail=False, methods=['post'])
+    def pin_concert(self, request):
+        auth_header = request.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer '):
+            firebase_token = auth_header.split(' ')[1]
+            decoded_token = auth.verify_id_token(
+                firebase_token, clock_skew_seconds=5)
+            firebase_uid = decoded_token['uid']
+            current_user = User.objects.filter(
+                uid_firebase=firebase_uid).first()
+            user_concert_id = request.data.get('user_concert')
+        try:
+            user_concert = UserConcert.objects.get(
+                id=user_concert_id,
+                user=current_user
+            )
+            user_concert.pinned = True
+            user_concert.save()
+            return Response({'Concert pinned to profile'}, status=200)
+        except UserConcert.DoesNotExist:
+            return Response({'error': 'Not authorized or ticket not found'}, status=403)
+
+    @action(detail=False, methods=['delete'])
+    def unpin_concert(self, request):
+        auth_header = request.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer '):
+            firebase_token = auth_header.split(' ')[1]
+            decoded_token = auth.verify_id_token(
+                firebase_token, clock_skew_seconds=5)
+            firebase_uid = decoded_token['uid']
+            current_user = User.objects.filter(
+                uid_firebase=firebase_uid).first()
+            user_concert_id = request.data.get('user_concert')
+        try:
+            user_concert = UserConcert.objects.get(
+                id=user_concert_id,
+                user=current_user
+            )
+            user_concert.pinned = False
+            user_concert.save()
+            return Response({'Concert unpinned from profile'}, status=200)
+        except UserConcert.DoesNotExist:
+            return Response({'error': 'Not authorized or ticket not found'}, status=403)
