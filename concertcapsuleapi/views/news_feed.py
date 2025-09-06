@@ -21,5 +21,6 @@ def news_feed(request):
             user__in=following_users
         ).select_related('user', 'concert').order_by('-created_at')[:50]
 
-        serializer = UserConcertSerializer(news_feed_items, many=True)
+        serializer = UserConcertSerializer(
+            news_feed_items, many=True, context={'user': current_user})
         return Response(serializer.data)
