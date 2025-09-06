@@ -35,7 +35,7 @@ class UserConcertSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserConcert
         fields = ['id', 'concert', 'username',
-                  'created_at', 'is_liked', 'like_count']
+                  'created_at', 'is_liked', 'like_count', 'pinned']
 
     def get_is_liked(self, obj):
         user = self.context['user']

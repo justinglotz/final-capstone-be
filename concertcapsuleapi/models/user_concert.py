@@ -14,3 +14,4 @@ class UserConcert(models.Model):
     concert = models.ForeignKey(
         Concert, on_delete=models.CASCADE, related_name="userconcerts")
     created_at = models.DateTimeField(auto_now_add=True)
+    pinned = models.BooleanField(default=False)
