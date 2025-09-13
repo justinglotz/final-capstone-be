@@ -15,3 +15,6 @@ class UserConcert(models.Model):
         Concert, on_delete=models.CASCADE, related_name="userconcerts")
     created_at = models.DateTimeField(auto_now_add=True)
     pinned = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('concert', 'user')
