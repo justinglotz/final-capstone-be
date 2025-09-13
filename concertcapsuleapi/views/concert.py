@@ -42,7 +42,7 @@ class ConcertView(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
-        """Handle GET requests to get all concerts by username"""
+        """Handle GET requests to get all concerts (userConcert objects) by username"""
         auth_header = request.headers.get('Authorization')
         if auth_header and auth_header.startswith('Bearer '):
             firebase_token = auth_header.split(' ')[1]
@@ -53,11 +53,11 @@ class ConcertView(viewsets.ViewSet):
                 uid_firebase=firebase_uid).first()
         username = request.query_params.get("username")
         user = User.objects.get(username=username)
-        concerts = UserConcert.objects.filter(
+        user_concerts = UserConcert.objects.filter(
             user=user).order_by("-concert__date")
 
         serializer = UserConcertSerializer(
-            concerts, many=True, context={'user': current_user})
+            user_concerts, many=True, context={'user': current_user})
         return Response(serializer.data)
 
     def destroy(self, request, pk):
@@ -75,8 +75,10 @@ class ConcertView(viewsets.ViewSet):
         concert_id = pk
         username = request.data.get('username')
         user = User.objects.get(username=username)
+        concert = Concert.objects.get(id=concert_id)
+        existing = UserConcert.objects.filter(concert=concert, user=user)
         user_concert, created = UserConcert.objects.get_or_create(
-            concert_id=concert_id,
+            concert=concert,
             user=user
         )
         if created:
