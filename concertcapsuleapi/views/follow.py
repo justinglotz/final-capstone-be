@@ -16,7 +16,7 @@ class FollowView(viewsets.ModelViewSet):
         decoded_token = auth.verify_id_token(firebase_token)
         firebase_uid = decoded_token['uid']
         follower = User.objects.filter(uid_firebase=firebase_uid).first()
-        followerUsername = request.data.get('target_username')
+        followerUsername = request.query_params.get('username')
         following = User.objects.filter(username=followerUsername).first()
         if follower == following:
             return Response({'message:' 'Cannot follow yourself'})
