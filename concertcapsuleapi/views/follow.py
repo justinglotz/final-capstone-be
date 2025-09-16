@@ -9,7 +9,10 @@ from firebase_admin import auth
 class FollowView(viewsets.ModelViewSet):
     def create(self, request):
         """Handle POST requests to add a follow"""
-        firebase_token = request.data.get('firebase_token')
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return Response({'error': 'Missing auth'}, status=status.HTTP_401_UNAUTHORIZED)
+        firebase_token = auth_header.split(' ')[1]
         decoded_token = auth.verify_id_token(firebase_token)
         firebase_uid = decoded_token['uid']
         follower = User.objects.filter(uid_firebase=firebase_uid).first()
