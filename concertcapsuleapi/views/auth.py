@@ -44,8 +44,8 @@ def register_user(request):
     user = User.objects.create(
         uid_firebase=request.data['uid_firebase'],
         username=request.data['username'],
-        first_name=request.data['first_name'],
-        last_name=request.data['last_name']
+        first_name=request.data.get('first_name', None),
+        last_name=request.data.get('last_name', None)
     )
 
     # Return the user info to the client
