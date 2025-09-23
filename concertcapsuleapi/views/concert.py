@@ -60,10 +60,9 @@ class ConcertView(viewsets.ViewSet):
             user_concerts, many=True, context={'user': current_user})
         return Response(serializer.data)
 
-    def destroy(self, request, pk):
+    def destroy(self, pk):
         """Handle DELETE requests for concerts"""
         # Delete the row in the userConcert table where the concert_id and user_id match
-        username = request.query_params.get("username")
         user_concert = UserConcert.objects.get(
             pk=pk
         )
