@@ -17,9 +17,9 @@ This app is designed for people who love concerts and want to have one place to 
 - SQLite Database for local development
 - Postgres Database for production (hosted on Render)
 
-## API Documentation
+## API Documentation (Work in Progress)
 
-- Coming soon...
+- [API Documentation](https://documenter.getpostman.com/view/38515285/2sB3HqGdUn)
 
 ## Video Walkthrough of ConcertCapsule
 [Demo](https://www.loom.com/share/d0d6ad63c2af45b587b9a9d530399c3b)
