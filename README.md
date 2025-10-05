@@ -17,7 +17,7 @@ This app is designed for people who love concerts and want to have one place to 
 - SQLite Database for local development
 - Postgres Database for production (hosted on Render)
 
-## API Documentation (Work in Progress)
+## API Documentation
 
 - [API Documentation](https://documenter.getpostman.com/view/38515285/2sB3HqGdUn)
 
