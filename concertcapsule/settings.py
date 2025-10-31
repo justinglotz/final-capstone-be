@@ -42,8 +42,14 @@ SECRET_KEY = 'django-insecure-cbly)j56@$xydy%&jld#j(&h$tjzh1c7xoa9elvlf0h)^gs%el
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['concert-capsule-api.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = ['concert-capsule-api.onrender.com', '127.0.0.1',
+                 'ec2-18-118-104-33.us-east-2.compute.amazonaws.com', 'api.concertcapsule.com', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://api.concertcapsule.com',
+    'https://www.concertcapsule.com',
+    'https://concertcapsule.com',
+]
 
 # Application definition
 
@@ -72,9 +78,13 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://www.concertcapsule.com"
+    "https://www.concertcapsule.com",
+    "https://concertcapsule.com",
 
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 ROOT_URLCONF = 'concertcapsule.urls'
 
