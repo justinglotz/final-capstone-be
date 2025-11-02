@@ -35,5 +35,5 @@ jobs:
               "docker stop concert-capsule-api || true",
               "docker rm concert-capsule-api || true",
               "docker run --pull always -d --name concert-capsule-api -p 80:8000 \\"$IMAGE\\""
-              ]' \\    
+              ]' \    
           --region \${{ secrets.AWS_REGION }}
